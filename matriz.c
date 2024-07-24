@@ -141,6 +141,35 @@ void multMatVetLoopUnrollingAndJam (MatRow mat, Vetor v, int m, int n, Vetor res
   }
 }
 
+void multMatVetLoopUnrollingJamAndBlocking (MatRow mat, Vetor v, int m, int n, Vetor res)
+{
+  if (res) {
+    int f = 2 //fator de desenrolamento
+
+    //loop unrolling com fator 2 
+    for (int ii=0; ii<N/b; ++ii) {
+    istart=ii*b; 
+    iend=istart+b;
+      for (int jj=0; jj<N/b; ++jj) {
+        jstart=jj*b; 
+        jend=jstart+b;
+        for (int i=istart; i < iend; i+=f)
+        {
+          for (int j=jstart; j < jend; ++j){
+            res[i] += mat[n*i + j] * v[j];
+            // aqui teriam mais conforme o fator
+            res[i+(f-1)] += mat[n*(i+(f-1)) + (f-1)] * v[j];
+          }
+        }
+      }
+    }
+
+    // calculo do residuo
+    for (int i=m-m%f; i < m; i++)
+      for (int j=0; j < n; ++j)
+        res[i] += mat[n*i + j] * v[j];
+  }
+}
 
 /**
  *  Funcao multMatMat: Efetua multiplicacao de duas matrizes 'n x n' 
@@ -200,14 +229,16 @@ void multMatMatLoopUnrollingJamAndBlocking (MatRow A, MatRow B, int n, MatRow C)
     istart=ii*b; 
     iend=istart+b;
     for (int jj=0; jj<N/b; ++jj) {
-      jstart=jj*b; jend=jstart+b;
+      jstart=jj*b; 
+      jend=jstart+b;
       for (int kk=0; kk<N/b; ++kk) {
-        kstart=kk*b; kend=kstart+b;
-          for (int i=0; i < n; ++i){
-            for (int j=0; j < n-n%f; j+=f){
+        kstart=kk*b; 
+        kend=kstart+b;
+          for (int i=istart; i < iend; ++i){
+            for (int j=jstart; j < jend; j+=f){
               C[i*n+j] =  0.0;
               C[i*n+(j+ (f-1))] = 0.0;
-              for (int k=0; k < n; ++k){
+              for (int k=kstart; k < kend; ++k){
                 C[i*n+j] += A[i*n+k] * B[k*n+j];
                 // aqui teriam mais conforme o fator
                 C[i*n+(j+(f-1))] += A[i*n+k] * B[k*n+(j+(f-1))];
