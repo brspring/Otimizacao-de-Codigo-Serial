@@ -122,7 +122,7 @@ void multMatVet (MatRow mat, Vetor v, int m, int n, Vetor res)
 void multMatVetLoopUnrollingAndJam (MatRow mat, Vetor v, int m, int n, Vetor res)
 {
   if (res) {
-    int f = 2 //fator de desenrolamento
+    int f = 2; //fator de desenrolamento
 
     //loop unrolling com fator 2 
     for (int i=0; i < m-m%f; i+=f)
@@ -207,7 +207,6 @@ void multMatMatLoopUnrollingAndJam (MatRow A, MatRow B, int n, MatRow C)
         C[i*n+(j+(f-1))] += A[i*n+k] * B[k*n+(j+(f-1))];
       }
     }
-  }
 
   // residuo do laco J
   for (int j= n - n%f; j < n; ++j){
@@ -216,6 +215,7 @@ void multMatMatLoopUnrollingAndJam (MatRow A, MatRow B, int n, MatRow C)
 	      C[i*n+j] += A[i*n+k] * B[k*n+j];
       }
     }
+  }
 }
 
 void multMatMatLoopUnrollingJamAndBlocking (MatRow A, MatRow B, int n, MatRow C)
