@@ -146,12 +146,12 @@ void multMatVetLoopUnrollingJamAndBlocking (MatRow mat, Vetor v, int m, int n, V
   if (res) {
     int f = 2; //fator de desenrolamento
     int b = 4;
-    
+
     //loop unrolling com fator 2 
-    for (int ii=0; ii<N/b; ++ii) {
+    for (int ii=0; ii<m/b; ++ii) {
     istart=ii*b; 
     iend=istart+b;
-      for (int jj=0; jj<N/b; ++jj) {
+      for (int jj=0; jj<n/b; ++jj) {
         jstart=jj*b; 
         jend=jstart+b;
         for (int i=istart; i < iend; i+=f)
@@ -226,13 +226,13 @@ void multMatMatLoopUnrollingJamAndBlocking (MatRow A, MatRow B, int n, MatRow C)
   int istart, jstart, kstart;
   int iend, jend, kend;
   // unroll and jam + blocking
-  for (int ii=0; ii<N/b; ++ii) {
+  for (int ii=0; ii<n/b; ++ii) {
     istart=ii*b; 
     iend=istart+b;
-    for (int jj=0; jj<N/b; ++jj) {
+    for (int jj=0; jj<n/b; ++jj) {
       jstart=jj*b; 
       jend=jstart+b;
-      for (int kk=0; kk<N/b; ++kk) {
+      for (int kk=0; kk<n/b; ++kk) {
         kstart=kk*b; 
         kend=kstart+b;
           for (int i=istart; i < iend; ++i){
