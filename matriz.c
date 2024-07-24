@@ -188,6 +188,38 @@ void multMatMatLoopUnrollingAndJam (MatRow A, MatRow B, int n, MatRow C)
     }
 }
 
+void multMatMatLoopUnrollingJamAndBlocking (MatRow A, MatRow B, int n, MatRow C)
+{
+  int f = 2;  //fator 
+  int b = 4;  // qunatos blocos a matriz sera dividida
+  // qunado b é multiplo de n e n é multiplo de b n tem residuo
+  int istart, jstart, kstart;
+  int iend, jend, kend;
+  // unroll and jam + blocking
+  for (int ii=0; ii<N/b; ++ii) {
+    istart=ii*b; 
+    iend=istart+b;
+    for (int jj=0; jj<N/b; ++jj) {
+      jstart=jj*b; jend=jstart+b;
+      for (int kk=0; kk<N/b; ++kk) {
+        kstart=kk*b; kend=kstart+b;
+          for (int i=0; i < n; ++i){
+            for (int j=0; j < n-n%f; j+=f){
+              C[i*n+j] =  0.0;
+              C[i*n+(j+ (f-1))] = 0.0;
+              for (int k=0; k < n; ++k){
+                C[i*n+j] += A[i*n+k] * B[k*n+j];
+                // aqui teriam mais conforme o fator
+                C[i*n+(j+(f-1))] += A[i*n+k] * B[k*n+(j+(f-1))];
+              }
+            }
+          }
+      }
+    }
+  }
+}
+
+
 
 /**
  *  Funcao prnMat:  Imprime o conteudo de uma matriz em stdout
