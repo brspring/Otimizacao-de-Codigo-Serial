@@ -119,6 +119,25 @@ void multMatVet (MatRow mat, Vetor v, int m, int n, Vetor res)
   }
 }
 
+void multMatVetLoopUnrollingAndJam (MatRow mat, Vetor v, int m, int n, Vetor res)
+{
+  if (res) {
+    //loop unrolling com fator 2 
+    for (int i=0; i < m-m%2; i+=m)
+    {
+      for (int j=0; j < n; ++j){
+        res[i] += mat[n*i + j] * v[j];
+        res[i+1] += mat[n*(i+1) + j] * v[j];
+      }
+    }
+
+    // calculo do residuo
+    for (int i=m-m%2; i < m; i++)
+      for (int j=0; j < n; ++j)
+        res[i] += mat[n*i + j] * v[j];
+  }
+}
+
 
 /**
  *  Funcao multMatMat: Efetua multiplicacao de duas matrizes 'n x n' 
@@ -138,6 +157,28 @@ void multMatMat (MatRow A, MatRow B, int n, MatRow C)
     for (int j=0; j < n; ++j)
       for (int k=0; k < n; ++k)
 	C[i*n+j] += A[i*n+k] * B[k*n+j];
+}
+
+void multMatMatLoopUnrollingAndJam (MatRow A, MatRow B, int n, MatRow C)
+{
+  // unroll and jam com fator 2
+  for (int i=0; i < n; ++i){
+    for (int j=0; j < n-n%2; j+=m){
+      C[i*n+j] = C[i*n+(j+1)] = 0.0;
+      for (int k=0; k < n; ++k){
+	      C[i*n+j] += A[i*n+k] * B[k*n+j];
+        C[i*n+(j+1)] += A[i*n+k] * B[k*n+(j+1)];
+      }
+    }
+  }
+
+  // residuo do laco J
+  for (int j=n%2; j < n; j+=m){
+      C[i*n+j] = 0.0;
+      for (int k=0; k < n; ++k){
+	      C[i*n+j] += A[i*n+k] * B[k*n+j];
+      }
+    }
 }
 
 
