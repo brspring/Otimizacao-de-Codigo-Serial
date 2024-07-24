@@ -144,8 +144,9 @@ void multMatVetLoopUnrollingAndJam (MatRow mat, Vetor v, int m, int n, Vetor res
 void multMatVetLoopUnrollingJamAndBlocking (MatRow mat, Vetor v, int m, int n, Vetor res)
 {
   if (res) {
-    int f = 2 //fator de desenrolamento
-
+    int f = 2; //fator de desenrolamento
+    int b = 4;
+    
     //loop unrolling com fator 2 
     for (int ii=0; ii<N/b; ++ii) {
     istart=ii*b; 
