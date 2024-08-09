@@ -3,8 +3,8 @@
 #include <string.h>
 #include <getopt.h>    /* getopt */
 #include <time.h>
-#include <likwid.h>
 
+#include <likwid.h>
 #include "matriz.h"
 #include "utils.h"
 
@@ -72,18 +72,18 @@ int main (int argc, char *argv[])
     printf ("=================================\n\n");
 #endif /* _DEBUG_ */
   
-  LIKWID_MAR  KER_INIT;
+  LIKWID_MARKER_INIT;
 
   LIKWID_MARKER_START("MultMatVetSem");
   time_t inicio = timestamp();
   multMatVet(mRow_1, vet, n, n, res);
-  printf("tSemOtimMxV:%lf\n", timestamp() - inicio);
+  printf("Sem Otimizacao MxV:%lf\n", timestamp() - inicio);
   LIKWID_MARKER_STOP("MultMatVetSem");
 
   LIKWID_MARKER_START("MultMatMatSem");
   inicio = timestamp();
   multMatMat(mRow_1, mRow_2, n, resMat);
-  printf("tSemOtimMxM:%lf\n", timestamp() - inicio);
+  printf("Sem Otimizacao MxM:%lf\n", timestamp() - inicio);
   LIKWID_MARKER_STOP("MultMatMatSem");
 
 #ifdef _DEBUG_
@@ -99,14 +99,14 @@ int main (int argc, char *argv[])
 
   LIKWID_MARKER_START("MultMatVetCom");
   inicio = timestamp();
-  multMatVetUnrollJamBlocking(mRow_1, vet, n, n, res);
-  printf("tComOtimMxV:%f\n", timestamp() - inicio);
+  multMatVetLoopUnrollingAndJam(mRow_1, vet, n, n, res);
+  printf("Com Otimizacao MxV:%f\n", timestamp() - inicio);
   LIKWID_MARKER_STOP("MultMatVetCom");
 
   LIKWID_MARKER_START("MultMatMatCom");
   inicio = timestamp();
-  multMatMatUnrollJamBlocking(mRow_1, mRow_2, n, resMat);
-  printf("tComOtimMxM:%f\n", timestamp() - inicio);
+  multMatMatLoopUnrollingJamAndBlocking(mRow_1, mRow_2, n, resMat);
+  printf("Com Otimizacao MxM:%f\n", timestamp() - inicio);
   LIKWID_MARKER_STOP("MultMatMatCom");
   
   multMatVet (mRow_1, vet, n, n, res);

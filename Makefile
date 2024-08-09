@@ -4,7 +4,7 @@
 
 # Compilador
         CC = gcc -Wall
-		CFLAGS = -O3 -mavx -march=native
+		CFLAGS = -O3 -mavx -march=native -I/home/soft/likwid/include
 		LFLAGS = -lm -I/home/soft/likwid/include -L/home/soft/likwid/lib -DLIKWID_PERFMON -llikwid
 
 # Lista de arquivos para distribuição

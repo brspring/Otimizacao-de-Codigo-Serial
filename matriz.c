@@ -142,39 +142,6 @@ void multMatVetLoopUnrollingAndJam (MatRow mat, Vetor v, int m, int n, Vetor res
   }
 }
 
-//matriz com vetor nao é necessario blockiing pelo visto
-void multMatVetLoopUnrollingJamAndBlocking (MatRow mat, Vetor v, int m, int n, Vetor res)
-{
-  if (res) {
-    int istart, jstart;
-    int iend, jend;
-    
-    //loop unrolling com fator 2 
-    for (int ii=0; ii<m/BLK; ++ii) {
-    istart=ii*BLK; 
-    iend=istart+BLK;
-      for (int jj=0; jj<n/BLK; ++jj) {
-        jstart=jj*BLK; 
-        jend=jstart+BLK;
-        for (int i=istart; i < iend; i+=F)
-        {
-          for (int j=jstart; j < jend; ++j){
-            res[i] += mat[n*i + j] * v[j];
-            res[i+1] += mat[n*(i+1) + j] * v[j];
-            res[i+2] += mat[n*(i+2) + j] * v[j];
-            res[i+(F-1)] += mat[n*(i+(F-1)) + j] * v[j];
-          }
-        }
-      }
-    }
-
-    // calculo do residuo
-    for (int i=m-m%F; i < m; i++)
-      for (int j=0; j < n; ++j)
-        res[i] += mat[n*i + j] * v[j];
-  }
-}
-
 /**
  *  Funcao multMatMat: Efetua multiplicacao de duas matrizes 'n x n' 
  *  @param A matriz 'n x n'
@@ -194,33 +161,6 @@ void multMatMat (MatRow A, MatRow B, int n, MatRow C)
       for (int k=0; k < n; ++k)
 	      C[i*n+j] += A[i*n+k] * B[k*n+j];
 }
-
-/* void multMatMatLoopUnrollingAndJam (MatRow A, MatRow B, int n, MatRow C)
-{
-  // unroll and jam com fator 2
-  for (int i=0; i < n; ++i){
-    for (int j=0; j < n-n%F; j+=F){
-      C[i*n+j] =  0.0;
-      C[(i+1)*n+j] =  0.0;
-      C[(i+2)*n+j] =  0.0;
-      C[(i+3)*n+j] =  0.0;
-      for (int k=0; k < n; ++k){
-	      C[(i+1)*n+j] += A[(i+1)*n+k] * B[k*n+j];
-        C[(i+2)*n+j] += A[(i+2)*n+k] * B[k*n+j];
-        C[(i+3)*n+j] += A[(i+3)*n+k] * B[k*n+j];
-        C[(i+(F-1))*n+j] += A[(i+(F-1))*n+k] * B[k*n+j];
-      }
-    }
-
-  // residuo do laco J
-  for (int j= n - n%F; j < n; ++j){
-      C[i*n+j] = 0.0;
-      for (int k=0; k < n; ++k){
-	      C[i*n+j] += A[i*n+k] * B[k*n+j];
-      }
-    }
-  }
-}*/
 
 void multMatMatLoopUnrollingJamAndBlocking (MatRow A, MatRow B, int n, MatRow C)
 {
