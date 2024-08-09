@@ -3,10 +3,9 @@
         OBJS = $(PROG).o matriz.o
 
 # Compilador
-           CC = gcc -Wall
-
-       CFLAGS =  
-       LFLAGS = -lm
+        CC = gcc -Wall
+		CFLAGS = -O3 -mavx -march=native
+		LFLAGS = -lm -I/home/soft/likwid/include -L/home/soft/likwid/lib -DLIKWID_PERFMON -llikwid
 
 # Lista de arquivos para distribuição
 DISTFILES = *.c *.h README.md Makefile perfctr

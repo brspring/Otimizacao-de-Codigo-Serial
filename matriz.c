@@ -141,6 +141,7 @@ void multMatVetLoopUnrollingAndJam (MatRow mat, Vetor v, int m, int n, Vetor res
   }
 }
 
+//matriz com vetor nao é necessario blockiing pelo visto
 void multMatVetLoopUnrollingJamAndBlocking (MatRow mat, Vetor v, int m, int n, Vetor res)
 {
   if (res) {
@@ -222,7 +223,7 @@ void multMatMatLoopUnrollingAndJam (MatRow A, MatRow B, int n, MatRow C)
 
 void multMatMatLoopUnrollingJamAndBlocking (MatRow A, MatRow B, int n, MatRow C)
 {
-  int f = 2;  //fator 
+  int f = 4;  //fator 
   int b = 4;  // qunatos blocos a matriz sera dividida
   // qunado b é multiplo de n e n é multiplo de b n tem residuo
   int istart, jstart, kstart;
@@ -243,6 +244,8 @@ void multMatMatLoopUnrollingJamAndBlocking (MatRow A, MatRow B, int n, MatRow C)
               C[i*n+(j+ (f-1))] = 0.0;
               for (int k=kstart; k < kend; ++k){
                 C[i*n+j] += A[i*n+k] * B[k*n+j];
+                C[i*n+(j+1)] += A[i*n+k] * B[k*n+(j+1)];
+                C[i*n+(j+2)] += A[i*n+k] * B[k*n+(j+2)];
                 // aqui teriam mais conforme o fator
                 C[i*n+(j+(f-1))] += A[i*n+k] * B[k*n+(j+(f-1))];
               }
