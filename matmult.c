@@ -108,10 +108,8 @@ int main (int argc, char *argv[])
   multMatMatLoopUnrollingJamAndBlocking(mRow_1, mRow_2, n, resMat);
   printf("Com Otimizacao MxM:%f\n", timestamp() - inicio);
   LIKWID_MARKER_STOP("MultMatMatCom");
-  
-  multMatVet (mRow_1, vet, n, n, res);
-    
-  multMatMat (mRow_1, mRow_2, n, resMat);
+
+  LIKWID_MARKER_CLOSE;
     
 #ifdef _DEBUG_
     prnVetor (res, n);

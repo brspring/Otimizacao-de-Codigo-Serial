@@ -9,11 +9,11 @@ mkdir -p ${DATA_DIR}
 
 echo "performance" > /sys/devices/system/cpu/cpufreq/policy${CPU}/scaling_governor
 
-make purge likwid
+make purge matmult
 
 METRICA="FLOPS_DP L2CACHE L3"
 TEMPOS="${DATA_DIR}/Tempos.csv"
-TAMANHOS="64 100 128 200 256 512 600 900 1024 2000 2048 4000"
+TAMANHOS="64"
 
 for m in ${METRICA}
 do
@@ -37,4 +37,3 @@ do
 done
 
 echo "powersave" > /sys/devices/system/cpu/cpufreq/policy${CPU}/scaling_governor 
-
