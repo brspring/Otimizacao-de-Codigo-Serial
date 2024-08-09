@@ -3,8 +3,10 @@
 #include <string.h>
 #include <getopt.h>    /* getopt */
 #include <time.h>
+#include <likwid.h>
 
 #include "matriz.h"
+#include "utils.h"
 
 /**
  * Exibe mensagem de erro indicando forma de uso do programa e termina
@@ -39,6 +41,7 @@ int main (int argc, char *argv[])
     usage(argv[0]);
 
   n = atoi(argv[1]);
+  printf("Ordem da matriz: %d\n", n);
   
   /* ================ FIM DO TRATAMENTO DE LINHA DE COMANDO ========= */
  
@@ -69,16 +72,19 @@ int main (int argc, char *argv[])
     printf ("=================================\n\n");
 #endif /* _DEBUG_ */
   
-  memset(res, 0, n * sizeof(real_t));
-  memset(resMat, 0, n * n * sizeof(real_t));
+  LIKWID_MAR  KER_INIT;
 
+  LIKWID_MARKER_START("MultMatVetSem");
   time_t inicio = timestamp();
   multMatVet(mRow_1, vet, n, n, res);
-  printf("tSemOtimMxV:%ld\n", timestamp() - inicio);
+  printf("tSemOtimMxV:%lf\n", timestamp() - inicio);
+  LIKWID_MARKER_STOP("MultMatVetSem");
 
+  LIKWID_MARKER_START("MultMatMatSem");
   inicio = timestamp();
   multMatMat(mRow_1, mRow_2, n, resMat);
-  printf("tSemOtimMxM:%ld\n", timestamp() - inicio);
+  printf("tSemOtimMxM:%lf\n", timestamp() - inicio);
+  LIKWID_MARKER_STOP("MultMatMatSem");
 
 #ifdef _DEBUG_
   prnVetor(res, n);
@@ -91,15 +97,18 @@ int main (int argc, char *argv[])
   memset(res, 0, n * sizeof(real_t));
   memset(resMat, 0, n * n * sizeof(real_t));
 
+  LIKWID_MARKER_START("MultMatVetCom");
   inicio = timestamp();
-  multMatMatLoopUnrollingAndJam(mRow_1, vet, n, n, res);
   multMatVetUnrollJamBlocking(mRow_1, vet, n, n, res);
-  printf("tComOtimMxV:%ld\n", timestamp() - inicio);
+  printf("tComOtimMxV:%f\n", timestamp() - inicio);
+  LIKWID_MARKER_STOP("MultMatVetCom");
 
+  LIKWID_MARKER_START("MultMatMatCom");
   inicio = timestamp();
   multMatMatUnrollJamBlocking(mRow_1, mRow_2, n, resMat);
-  printf("tComOtimMxM:%ld\n", timestamp() - inicio);
-
+  printf("tComOtimMxM:%f\n", timestamp() - inicio);
+  LIKWID_MARKER_STOP("MultMatMatCom");
+  
   multMatVet (mRow_1, vet, n, n, res);
     
   multMatMat (mRow_1, mRow_2, n, resMat);

@@ -195,7 +195,7 @@ void multMatMat (MatRow A, MatRow B, int n, MatRow C)
 	      C[i*n+j] += A[i*n+k] * B[k*n+j];
 }
 
-void multMatMatLoopUnrollingAndJam (MatRow A, MatRow B, int n, MatRow C)
+/* void multMatMatLoopUnrollingAndJam (MatRow A, MatRow B, int n, MatRow C)
 {
   // unroll and jam com fator 2
   for (int i=0; i < n; ++i){
@@ -220,7 +220,7 @@ void multMatMatLoopUnrollingAndJam (MatRow A, MatRow B, int n, MatRow C)
       }
     }
   }
-}
+}*/
 
 void multMatMatLoopUnrollingJamAndBlocking (MatRow A, MatRow B, int n, MatRow C)
 {

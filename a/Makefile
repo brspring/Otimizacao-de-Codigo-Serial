@@ -1,18 +1,19 @@
 # PROGRAMA
         PROG = matmult
-        OBJS = $(PROG).o matriz.o utils.o
+        OBJS = $(PROG).o matriz.o
 
 # Compilador
-        CC = gcc -Wall
-		CFLAGS = -O3 -mavx -march=native
-		LFLAGS = -lm -I/home/soft/likwid/include -L/home/soft/likwid/lib -DLIKWID_PERFMON -llikwid
+           CC = gcc -Wall
+
+       CFLAGS =  
+       LFLAGS = -lm
 
 # Lista de arquivos para distribuição
 DISTFILES = *.c *.h README.md Makefile perfctr
 DISTDIR = `basename ${PWD}`
 
 .PHONY: all debug clean purge dist
-	
+
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $<
 
