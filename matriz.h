@@ -9,6 +9,9 @@
 
 #define ABS(num)  ((num) < 0.0 ? -(num) : (num))
 
+#define BLK 4
+#define F 4
+
 /* Tipos para matrizes e vetores */
 
 typedef double real_t;

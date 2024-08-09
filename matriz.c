@@ -122,22 +122,23 @@ void multMatVet (MatRow mat, Vetor v, int m, int n, Vetor res)
 void multMatVetLoopUnrollingAndJam (MatRow mat, Vetor v, int m, int n, Vetor res)
 {
   if (res) {
-    int f = 2; //fator de desenrolamento
-
     //loop unrolling com fator 2 
-    for (int i=0; i < m-m%f; i+=f)
+    for (int i=0; i < m-m%F; i+=F)
     {
       for (int j=0; j < n; ++j){
         res[i] += mat[n*i + j] * v[j];
-        // aqui teriam mais conforme o fator
-        res[i+(f-1)] += mat[n*(i+(f-1)) + (f-1)] * v[j];
+        res[i+1] += mat[n*(i+1) + j] * v[j];
+        res[i+2] += mat[n*(i+2) + j] * v[j];
+        res[i+(F-1)] += mat[n*(i+(F-1)) + j] * v[j];
       }
     }
 
     // calculo do residuo
-    for (int i=m-m%f; i < m; i++)
-      for (int j=0; j < n; ++j)
+    for (int i=m-m%F; i < m; i++){
+      for (int j=0; j < n; ++j){
         res[i] += mat[n*i + j] * v[j];
+      }
+    }
   }
 }
 
@@ -145,31 +146,30 @@ void multMatVetLoopUnrollingAndJam (MatRow mat, Vetor v, int m, int n, Vetor res
 void multMatVetLoopUnrollingJamAndBlocking (MatRow mat, Vetor v, int m, int n, Vetor res)
 {
   if (res) {
-    int f = 2; //fator de desenrolamento
-    int b = 4;
     int istart, jstart;
     int iend, jend;
     
     //loop unrolling com fator 2 
-    for (int ii=0; ii<m/b; ++ii) {
-    istart=ii*b; 
-    iend=istart+b;
-      for (int jj=0; jj<n/b; ++jj) {
-        jstart=jj*b; 
-        jend=jstart+b;
-        for (int i=istart; i < iend; i+=f)
+    for (int ii=0; ii<m/BLK; ++ii) {
+    istart=ii*BLK; 
+    iend=istart+BLK;
+      for (int jj=0; jj<n/BLK; ++jj) {
+        jstart=jj*BLK; 
+        jend=jstart+BLK;
+        for (int i=istart; i < iend; i+=F)
         {
           for (int j=jstart; j < jend; ++j){
             res[i] += mat[n*i + j] * v[j];
-            // aqui teriam mais conforme o fator
-            res[i+(f-1)] += mat[n*(i+(f-1)) + (f-1)] * v[j];
+            res[i+1] += mat[n*(i+1) + j] * v[j];
+            res[i+2] += mat[n*(i+2) + j] * v[j];
+            res[i+(F-1)] += mat[n*(i+(F-1)) + j] * v[j];
           }
         }
       }
     }
 
     // calculo do residuo
-    for (int i=m-m%f; i < m; i++)
+    for (int i=m-m%F; i < m; i++)
       for (int j=0; j < n; ++j)
         res[i] += mat[n*i + j] * v[j];
   }
@@ -197,22 +197,23 @@ void multMatMat (MatRow A, MatRow B, int n, MatRow C)
 
 void multMatMatLoopUnrollingAndJam (MatRow A, MatRow B, int n, MatRow C)
 {
-  int f = 2;  //fator 
-
   // unroll and jam com fator 2
   for (int i=0; i < n; ++i){
-    for (int j=0; j < n-n%f; j+=f){
+    for (int j=0; j < n-n%F; j+=F){
       C[i*n+j] =  0.0;
-      C[i*n+(j+ (f-1))] = 0.0;
+      C[(i+1)*n+j] =  0.0;
+      C[(i+2)*n+j] =  0.0;
+      C[(i+3)*n+j] =  0.0;
       for (int k=0; k < n; ++k){
-	      C[i*n+j] += A[i*n+k] * B[k*n+j];
-        // aqui teriam mais conforme o fator
-        C[i*n+(j+(f-1))] += A[i*n+k] * B[k*n+(j+(f-1))];
+	      C[(i+1)*n+j] += A[(i+1)*n+k] * B[k*n+j];
+        C[(i+2)*n+j] += A[(i+2)*n+k] * B[k*n+j];
+        C[(i+3)*n+j] += A[(i+3)*n+k] * B[k*n+j];
+        C[(i+(F-1))*n+j] += A[(i+(F-1))*n+k] * B[k*n+j];
       }
     }
 
   // residuo do laco J
-  for (int j= n - n%f; j < n; ++j){
+  for (int j= n - n%F; j < n; ++j){
       C[i*n+j] = 0.0;
       for (int k=0; k < n; ++k){
 	      C[i*n+j] += A[i*n+k] * B[k*n+j];
@@ -223,31 +224,29 @@ void multMatMatLoopUnrollingAndJam (MatRow A, MatRow B, int n, MatRow C)
 
 void multMatMatLoopUnrollingJamAndBlocking (MatRow A, MatRow B, int n, MatRow C)
 {
-  int f = 4;  //fator 
-  int b = 4;  // qunatos blocos a matriz sera dividida
-  // qunado b é multiplo de n e n é multiplo de b n tem residuo
   int istart, jstart, kstart;
   int iend, jend, kend;
   // unroll and jam + blocking
-  for (int ii=0; ii<n/b; ++ii) {
-    istart=ii*b; 
-    iend=istart+b;
-    for (int jj=0; jj<n/b; ++jj) {
-      jstart=jj*b; 
-      jend=jstart+b;
-      for (int kk=0; kk<n/b; ++kk) {
-        kstart=kk*b; 
-        kend=kstart+b;
+  for (int ii=0; ii<n/BLK; ++ii) {
+    istart=ii*BLK; 
+    iend=istart+BLK;
+    for (int jj=0; jj<n/BLK; ++jj) {
+      jstart=jj*BLK; 
+      jend=jstart+BLK;
+      for (int kk=0; kk<n/BLK; ++kk) {
+        kstart=kk*BLK; 
+        kend=kstart+BLK;
           for (int i=istart; i < iend; ++i){
-            for (int j=jstart; j < jend; j+=f){
+            for (int j=jstart; j < jend; j+=F){
               C[i*n+j] =  0.0;
-              C[i*n+(j+ (f-1))] = 0.0;
+              C[(i+1)*n+j] =  0.0;
+              C[(i+2)*n+j] =  0.0;
+              C[(i+3)*n+j] =  0.0;
               for (int k=kstart; k < kend; ++k){
                 C[i*n+j] += A[i*n+k] * B[k*n+j];
-                C[i*n+(j+1)] += A[i*n+k] * B[k*n+(j+1)];
-                C[i*n+(j+2)] += A[i*n+k] * B[k*n+(j+2)];
-                // aqui teriam mais conforme o fator
-                C[i*n+(j+(f-1))] += A[i*n+k] * B[k*n+(j+(f-1))];
+                C[(i+1)*n+j] += A[(i+1)*n+k] * B[k*n+j];
+                C[(i+2)*n+j] += A[(i+2)*n+k] * B[k*n+j];
+                C[(i+3)*n+j] += A[(i+3)*n+k] * B[k*n+j];
               }
             }
           }

@@ -12,7 +12,7 @@ DISTFILES = *.c *.h README.md Makefile perfctr
 DISTDIR = `basename ${PWD}`
 
 .PHONY: all debug clean purge dist
-
+	
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $<
 
