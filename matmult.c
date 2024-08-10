@@ -31,6 +31,7 @@ static void usage(char *progname)
 int main (int argc, char *argv[]) 
 {
   int n=DEF_SIZE;
+  LIKWID_MARKER_INIT;
   
   MatRow mRow_1, mRow_2, resMat;
   Vetor vet, res;
@@ -41,14 +42,13 @@ int main (int argc, char *argv[])
     usage(argv[0]);
 
   n = atoi(argv[1]);
-  printf("Ordem da matriz: %d\n", n);
   
   /* ================ FIM DO TRATAMENTO DE LINHA DE COMANDO ========= */
  
   srandom(20232);
       
   res = geraVetor (n, 0); // (real_t *) malloc (n*sizeof(real_t));
-  resMat = geraMatRow(n, n, 1);
+  resMat = geraMatRow(n, n, 0);
     
   mRow_1 = geraMatRow (n, n, 0);
   mRow_2 = geraMatRow (n, n, 0);
@@ -71,19 +71,17 @@ int main (int argc, char *argv[])
     prnVetor (vet, n);
     printf ("=================================\n\n");
 #endif /* _DEBUG_ */
-  
-  LIKWID_MARKER_INIT;
 
   LIKWID_MARKER_START("MultMatVetSem");
   time_t inicio = timestamp();
   multMatVet(mRow_1, vet, n, n, res);
-  printf("Sem Otimizacao MxV:%lf\n", timestamp() - inicio);
+  printf("%d,%lf", n, timestamp() - inicio);
   LIKWID_MARKER_STOP("MultMatVetSem");
 
   LIKWID_MARKER_START("MultMatMatSem");
   inicio = timestamp();
   multMatMat(mRow_1, mRow_2, n, resMat);
-  printf("Sem Otimizacao MxM:%lf\n", timestamp() - inicio);
+  printf(",%lf", timestamp() - inicio);
   LIKWID_MARKER_STOP("MultMatMatSem");
 
 #ifdef _DEBUG_
@@ -100,16 +98,14 @@ int main (int argc, char *argv[])
   LIKWID_MARKER_START("MultMatVetCom");
   inicio = timestamp();
   multMatVetLoopUnrollingAndJam(mRow_1, vet, n, n, res);
-  printf("Com Otimizacao MxV:%f\n", timestamp() - inicio);
+  printf(",%lf", timestamp() - inicio);
   LIKWID_MARKER_STOP("MultMatVetCom");
 
   LIKWID_MARKER_START("MultMatMatCom");
   inicio = timestamp();
   multMatMatLoopUnrollingJamAndBlocking(mRow_1, mRow_2, n, resMat);
-  printf("Com Otimizacao MxM:%f\n", timestamp() - inicio);
+  printf(",%lf\n", timestamp() - inicio);
   LIKWID_MARKER_STOP("MultMatMatCom");
-
-  LIKWID_MARKER_CLOSE;
     
 #ifdef _DEBUG_
     prnVetor (res, n);
@@ -121,7 +117,7 @@ int main (int argc, char *argv[])
   liberaVetor ((void*) resMat);
   liberaVetor ((void*) vet);
   liberaVetor ((void*) res);
-
+  LIKWID_MARKER_CLOSE;    
   return 0;
 }
 

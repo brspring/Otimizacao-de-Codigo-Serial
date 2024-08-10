@@ -9,7 +9,7 @@
 
 #define ABS(num)  ((num) < 0.0 ? -(num) : (num))
 
-#define BLK 4
+#define BLK 8
 #define F 4
 
 /* Tipos para matrizes e vetores */

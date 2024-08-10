@@ -178,15 +178,11 @@ void multMatMatLoopUnrollingJamAndBlocking (MatRow A, MatRow B, int n, MatRow C)
         kend=kstart+BLK;
           for (int i=istart; i < iend; ++i){
             for (int j=jstart; j < jend; j+=F){
-              C[i*n+j] =  0.0;
-              C[(i+1)*n+j] =  0.0;
-              C[(i+2)*n+j] =  0.0;
-              C[(i+3)*n+j] =  0.0;
               for (int k=kstart; k < kend; ++k){
                 C[i*n+j] += A[i*n+k] * B[k*n+j];
-                C[(i+1)*n+j] += A[(i+1)*n+k] * B[k*n+j];
-                C[(i+2)*n+j] += A[(i+2)*n+k] * B[k*n+j];
-                C[(i+3)*n+j] += A[(i+3)*n+k] * B[k*n+j];
+                C[i*n+(j+1)] += A[i*n+k] * B[k*n+(j+1)];
+                C[i*n+(j+2)] += A[i*n+k] * B[k*n+(j+2)];
+                C[i*n+(j+3)] += A[i*n+k] * B[k*n+(j+3)];
               }
             }
           }
@@ -194,6 +190,7 @@ void multMatMatLoopUnrollingJamAndBlocking (MatRow A, MatRow B, int n, MatRow C)
     }
   }
 }
+
 
 
 

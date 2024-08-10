@@ -17,15 +17,16 @@ set datafile separator comma
 #
 # TEMPO
 #
-ARQ=ARG1."/Tempos.csv"
-set key left top
-set logscale y
-set ylabel  "Tempo (ms)"
-set title   "Tempo"
-set terminal qt 0 title "Tempos"
-plot ARQ using 1:2 title "MatVet" lc rgb "green" with linespoints, \
-     '' using 1:3 title "MatMat" lc rgb "magenta" with linespoints
-
+ ARQ=ARG1."/Tempos.csv"
+ set key left top
+ set logscale y
+ set ylabel  "Tempo (ms)"
+ set title   "Tempo"
+ set terminal qt 0 title "Tempos"
+ plot ARQ using 1:2 title "MatVet" lc rgb "green" with linespoints, \
+     '' using 1:3 title "MatMat" lc rgb "red" with linespoints, \
+     '' using 1:4 title "MatVet otim. - unroll & jam" lc rgb "blue" with linespoints, \
+     '' using 1:5 title "MatMat otim. - unrolljam & blocking" lc rgb "orange" with linespoints
 # pause -1
 
 #
@@ -38,7 +39,9 @@ set ylabel  "FLOPS DP [MFlops/s]"
 set title   "FLOPS DP"
 set terminal qt 1 title "FLOPS DP"
 plot ARQ using 1:2 title "MatVet" lc rgb "green" with linespoints, \
-     '' using 1:3 title "MatMat" lc rgb "red" with linespoints
+     '' using 1:3 title "MatMat" lc rgb "red" with linespoints, \
+     '' using 1:4 title "MatVet otim. - unroll & jam" lc rgb "blue" with linespoints, \
+     '' using 1:5 title "MatMat otim. - unrolljam & blocking" lc rgb "orange" with linespoints
 # pause -1
 
 #
@@ -51,7 +54,9 @@ set ylabel  "L3 [MBytes/s]"
 set title   "L3"
 set terminal qt 3 title "L3"
 plot ARQ using 1:2 title "MatVet" lc rgb "green" with linespoints, \
-     '' using 1:3 title "MatMat" lc rgb "red" with linespoints
+     '' using 1:3 title "MatMat" lc rgb "red" with linespoints, \
+     '' using 1:4 title "MatVet otim. - unroll & jam" lc rgb "blue" with linespoints, \
+     '' using 1:5 title "MatMat otim. - unrolljam & blocking" lc rgb "orange" with linespoints
 
 # pause -1
 
@@ -65,7 +70,9 @@ set ylabel  "L2 miss ratio"
 set title   "L2 miss ratio"
 set terminal qt 4 title "L2 miss ratio"
 plot ARQ using 1:2 title "MatVet" lc rgb "green" with linespoints, \
-     '' using 1:3 title "MatMat" lc rgb "red" with linespoints
+     '' using 1:3 title "MatMat" lc rgb "red" with linespoints, \
+     '' using 1:4 title "MatVet otim. - unroll & jam" lc rgb "blue" with linespoints, \
+     '' using 1:5 title "MatMat otim. - unrolljam & blocking" lc rgb "orange" with linespoints
 
 pause -1
 
