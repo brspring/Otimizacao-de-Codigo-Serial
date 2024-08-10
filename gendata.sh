@@ -11,7 +11,7 @@ echo "performance" > /sys/devices/system/cpu/cpufreq/policy${CPU}/scaling_govern
 
 make purge matmult
 
-METRICA="FLOPS_DP L2CACHE L3"
+METRICA="FLOPS_DP L2CACHE L3 ENERGY"
 TEMPOS="${DATA_DIR}/Tempos.csv"
 TAMANHOS="64 100 128 200 256 512 600 900 1024 2000 2048 4000"
 

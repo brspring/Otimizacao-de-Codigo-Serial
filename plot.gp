@@ -90,17 +90,14 @@ pause -1
 #
 # ENERGY
 #
-# ARQ=ARG1."/ENERGY.csv"
-# set key center top
-# unset logscale y
-# set ylabel  "Energia [J]"
-# set title   "Energia"
-# set terminal qt 2 title "Energia"
-# plot ARQ using 1:2 title "MatVet" lc rgb "green" with linespoints, \
-#      '' using 1:3 title "MatVet-uj" lc rgb "red" with linespoints, \
-#      '' using 1:4 title "MatMat" lc rgb "magenta" with linespoints, \
-#      '' using 1:5 title "MatMat-uj" lc rgb "cyan" with linespoints, \
-#      '' using 1:6 title "MatMat-b" lc rgb "orange" with linespoints, \
-#      '' using 1:7 title "MatMat-ujb" lc rgb "black" with linespoints
-
-# pause -1
+ ARQ=ARG1."/ENERGY.csv"
+ set key center top
+ unset logscale y
+ set ylabel  "Energia [J]"
+ set title   "Energia"
+ set terminal qt 2 title "Energia"
+plot ARQ using 1:2 title "MatVet" lc rgb "green" with linespoints, \
+     '' using 1:3 title "MatMat" lc rgb "red" with linespoints, \
+     '' using 1:4 title "MatVet otim. - unroll & jam" lc rgb "blue" with linespoints, \
+     '' using 1:5 title "MatMat otim. - unrolljam & blocking" lc rgb "orange" with linespoints
+pause -1
